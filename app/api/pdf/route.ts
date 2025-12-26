@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { renderToBuffer } from '@react-pdf/renderer';
+import { pdf } from '@react-pdf/renderer';
 import { ReportDocument } from '@/components/pdf/ReportDocument';
-import React from 'react';
 
 export async function GET(request: Request) {
   try {
@@ -45,12 +44,13 @@ export async function GET(request: Request) {
     };
 
     // Generate PDF
-    const pdfBuffer = await renderToBuffer(
-      React.createElement(ReportDocument, {
-        data: scoringResult,
-        serviceName: (run.service as any)?.name || 'Unknown Service',
-      })
-    );
+    const doc = ReportDocument({
+      data: scoringResult,
+      serviceName: (run.service as any)?.name || 'Unknown Service',
+    });
+
+    const pdfBlob = await pdf(doc as any).toBlob();
+    const pdfBuffer = await pdfBlob.arrayBuffer();
 
     // Return PDF
     return new NextResponse(pdfBuffer, {
