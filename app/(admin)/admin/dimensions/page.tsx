@@ -3,6 +3,8 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/Table';
 import { Badge } from '@/components/ui/Badge';
 
+export const dynamic = 'force-dynamic';
+
 export default async function DimensionsPage() {
   const supabase = await createClient();
 

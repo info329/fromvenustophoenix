@@ -6,6 +6,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { formatDate } from '@/lib/utils/helpers';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ServicesPage() {
   const supabase = await createClient();
   

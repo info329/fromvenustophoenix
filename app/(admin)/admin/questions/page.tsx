@@ -2,6 +2,8 @@ import { createClient } from '@/lib/supabase/server';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 
+export const dynamic = 'force-dynamic';
+
 export default async function QuestionsPage() {
   const supabase = await createClient();
 

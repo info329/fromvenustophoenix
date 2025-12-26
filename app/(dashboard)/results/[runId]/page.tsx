@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/Badge';
 import { Progress } from '@/components/ui/Progress';
 import { formatDateTime } from '@/lib/utils/helpers';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ResultsPage({ params }: { params: { runId: string } }) {
   const supabase = await createClient();
   
