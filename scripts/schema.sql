@@ -172,3 +172,92 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ============================================================================
+-- ACECQA DATA INTEGRATION TABLES
+-- ============================================================================
+
+-- External service data from ACECQA National Registers
+CREATE TABLE external_services (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  acecqa_id TEXT UNIQUE,
+  service_name TEXT NOT NULL,
+  provider_name TEXT,
+  address TEXT,
+  suburb TEXT,
+  state TEXT,
+  postcode TEXT,
+  service_type TEXT,
+  overall_rating TEXT,
+  rating_date DATE,
+  qa1_rating TEXT,
+  qa2_rating TEXT,
+  qa3_rating TEXT,
+  qa4_rating TEXT,
+  qa5_rating TEXT,
+  qa6_rating TEXT,
+  qa7_rating TEXT,
+  phone TEXT,
+  email TEXT,
+  website TEXT,
+  approved_places INTEGER,
+  last_synced TIMESTAMPTZ DEFAULT NOW(),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- NQS snapshot/trend data (quarterly aggregates)
+CREATE TABLE nqs_snapshots (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  quarter TEXT NOT NULL, -- e.g., "Q3 2025"
+  state TEXT,
+  service_type TEXT,
+  quality_area TEXT, -- QA1-QA7
+  rating_level TEXT, -- Excellent, Exceeding, Meeting, etc.
+  count INTEGER,
+  percentage DECIMAL(5,2),
+  data_date DATE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(quarter, state, service_type, quality_area, rating_level)
+);
+
+-- Calculated benchmarks for quick lookup
+CREATE TABLE benchmarks (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  benchmark_type TEXT NOT NULL, -- 'state_qa', 'service_type_qa', 'overall'
+  state TEXT,
+  service_type TEXT,
+  quality_area TEXT,
+  metric_name TEXT, -- 'avg_score', 'focus_probability', 'rating_distribution'
+  metric_value JSONB,
+  calculation_date TIMESTAMPTZ DEFAULT NOW(),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Link user services to ACECQA data (for auto-population)
+ALTER TABLE services ADD COLUMN acecqa_id TEXT REFERENCES external_services(acecqa_id);
+
+-- Indexes for performance
+CREATE INDEX idx_external_services_search ON external_services(service_name, suburb, state);
+CREATE INDEX idx_external_services_state_type ON external_services(state, service_type);
+CREATE INDEX idx_external_services_postcode ON external_services(postcode);
+CREATE INDEX idx_nqs_snapshots_lookup ON nqs_snapshots(quarter, state, service_type, quality_area);
+CREATE INDEX idx_benchmarks_lookup ON benchmarks(benchmark_type, state, service_type, quality_area);
+
+-- RLS Policies for external data (public read-only)
+ALTER TABLE external_services ENABLE ROW LEVEL SECURITY;
+ALTER TABLE nqs_snapshots ENABLE ROW LEVEL SECURITY;
+ALTER TABLE benchmarks ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public read access to external_services" ON external_services FOR SELECT USING (true);
+CREATE POLICY "Public read access to nqs_snapshots" ON nqs_snapshots FOR SELECT USING (true);
+CREATE POLICY "Public read access to benchmarks" ON benchmarks FOR SELECT USING (true);
+
+-- Admin only write access
+CREATE POLICY "Admins can insert external_services" ON external_services FOR INSERT
+  USING (EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin'));
+CREATE POLICY "Admins can update external_services" ON external_services FOR UPDATE
+  USING (EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin'));
+CREATE POLICY "Admins can insert nqs_snapshots" ON nqs_snapshots FOR INSERT
+  USING (EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin'));
+CREATE POLICY "Admins can insert benchmarks" ON benchmarks FOR INSERT
+  USING (EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin'));
