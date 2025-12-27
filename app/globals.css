@@ -20,7 +20,8 @@
 
 @layer base {
   body {
-    @apply bg-white text-gray-900;
+    background-color: #ffffff;
+    color: #111827;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   }
 }
