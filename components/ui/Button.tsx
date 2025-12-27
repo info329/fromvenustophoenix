@@ -17,10 +17,10 @@ export function Button({
   const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
   
   const variantStyles = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700 focus-visible:ring-blue-600',
-    secondary: 'bg-slate-200 text-slate-900 hover:bg-slate-300 focus-visible:ring-slate-400',
-    danger: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600',
-    ghost: 'text-slate-700 hover:bg-slate-100 focus-visible:ring-slate-400',
+    primary: 'bg-[#0066cc] text-white hover:bg-[#0052a3] focus-visible:ring-[#0066cc] shadow-sm',
+    secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 focus-visible:ring-gray-400 border border-gray-300',
+    danger: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600 shadow-sm',
+    ghost: 'text-gray-700 hover:bg-gray-100 focus-visible:ring-gray-400',
   };
   
   const sizeStyles = {
