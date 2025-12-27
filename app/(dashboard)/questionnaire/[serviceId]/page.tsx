@@ -9,7 +9,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { Progress } from '@/components/ui/Progress';
 import type { Question, AnswerOption } from '@/types/database';
 
-export default function QuestionnairePage({ params }: { params: { serviceId: string } }) {
+export default function QuestionnairePage({ params }: { params: Promise<{ serviceId: string }> }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -18,16 +18,27 @@ export default function QuestionnairePage({ params }: { params: { serviceId: str
   const [questions, setQuestions] = useState<(Question & { options?: AnswerOption[] })[]>([]);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [error, setError] = useState('');
+  const [serviceId, setServiceId] = useState<string>('');
   const supabase = createClient();
 
   useEffect(() => {
+    const init = async () => {
+      const resolvedParams = await params;
+      setServiceId(resolvedParams.serviceId);
+    };
+    init();
+  }, [params]);
+
+  useEffect(() => {
+    if (!serviceId) return;
+    
     const fetchData = async () => {
       try {
         // Get service
         const { data: serviceData, error: serviceError } = await supabase
           .from('services')
           .select('*')
-          .eq('id', params.serviceId)
+          .eq('id', serviceId)
           .single();
 
         if (serviceError) throw serviceError;
@@ -76,7 +87,7 @@ export default function QuestionnairePage({ params }: { params: { serviceId: str
     };
 
     fetchData();
-  }, [params.serviceId, supabase]);
+  }, [serviceId, supabase]);
 
   const handleAnswer = (questionId: string, value: any) => {
     setResponses({
@@ -125,7 +136,7 @@ export default function QuestionnairePage({ params }: { params: { serviceId: str
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          serviceId: params.serviceId,
+          serviceId: serviceId,
           responses: apiResponses,
         }),
       });

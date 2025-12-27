@@ -9,12 +9,13 @@ import { Select } from '@/components/ui/Select';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { STATES, SERVICE_TYPES, RATINGS } from '@/lib/constants';
 
-export default function EditServicePage({ params }: { params: { id: string } }) {
+export default function EditServicePage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState('');
   const [service, setService] = useState<any>(null);
+  const [serviceId, setServiceId] = useState<string>('');
   const supabase = createClient();
 
   const [formData, setFormData] = useState({
@@ -29,11 +30,21 @@ export default function EditServicePage({ params }: { params: { id: string } }) 
   });
 
   useEffect(() => {
+    const init = async () => {
+      const resolvedParams = await params;
+      setServiceId(resolvedParams.id);
+    };
+    init();
+  }, [params]);
+
+  useEffect(() => {
+    if (!serviceId) return;
+    
     const fetchService = async () => {
       const { data, error } = await supabase
         .from('services')
         .select('*')
-        .eq('id', params.id)
+        .eq('id', serviceId)
         .single();
 
       if (error) {
@@ -55,7 +66,7 @@ export default function EditServicePage({ params }: { params: { id: string } }) 
     };
 
     fetchService();
-  }, [params.id, supabase]);
+  }, [serviceId, supabase]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,7 +87,7 @@ export default function EditServicePage({ params }: { params: { id: string } }) 
           last_rating_date: formData.last_rating_date || null,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', params.id);
+        .eq('id', serviceId);
 
       if (updateError) throw updateError;
 
@@ -99,7 +110,7 @@ export default function EditServicePage({ params }: { params: { id: string } }) 
       const { error: deleteError } = await supabase
         .from('services')
         .delete()
-        .eq('id', params.id);
+        .eq('id', serviceId);
 
       if (deleteError) throw deleteError;
 
