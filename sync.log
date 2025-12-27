@@ -1,0 +1,5 @@
+
+> fromvenustophoenix@0.1.0 sync-acecqa
+> tsx scripts/sync-acecqa-data.ts
+
+❌ Missing Supabase credentials

@@ -10,6 +10,7 @@
     "seed": "tsx scripts/seed.ts",
     "import-acecqa": "tsx scripts/import-acecqa-data.ts",
     "import-all-csv": "tsx scripts/import-all-csv.ts",
+    "sync-acecqa": "tsx scripts/sync-acecqa-data.ts",
     "setup-schema": "tsx scripts/setup-db.js"
   },
   "dependencies": {
@@ -18,6 +19,7 @@
     "@supabase/supabase-js": "^2.89.0",
     "clsx": "^2.1.1",
     "csv-parse": "^5.6.0",
+    "dotenv": "^17.2.3",
     "lucide-react": "^0.562.0",
     "next": "16.1.1",
     "nodemailer": "^7.0.12",
