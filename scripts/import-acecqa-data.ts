@@ -16,27 +16,26 @@ const DATA_SOURCES = {
 };
 
 interface ACECQAService {
-  ServiceID: string;
+  ServiceApprovalNumber: string;
+  'Provider Approval Number': string;
   ServiceName: string;
-  ProviderName: string;
+  ProviderLegalName: string;
   ServiceType: string;
   ServiceAddress: string;
   Suburb: string;
   State: string;
   Postcode: string;
   Phone: string;
-  Email: string;
-  Website: string;
-  ApprovedPlaces: string;
+  NumberOfApprovedPlaces: string;
+  QualityArea1Rating: string;
+  QualityArea2Rating: string;
+  QualityArea3Rating: string;
+  QualityArea4Rating: string;
+  QualityArea5Rating: string;
+  QualityArea6Rating: string;
+  QualityArea7Rating: string;
   OverallRating: string;
-  RatingDate: string;
-  QA1: string;
-  QA2: string;
-  QA3: string;
-  QA4: string;
-  QA5: string;
-  QA6: string;
-  QA7: string;
+  RatingsIssued: string;
 }
 
 async function downloadCSV(url: string): Promise<string> {
@@ -76,9 +75,9 @@ function normalizeRating(rating: string): string {
 
 function normalizeServiceType(type: string): string {
   const normalized = type?.trim().toLowerCase();
-  if (normalized.includes('long day')) return 'LDC';
-  if (normalized.includes('family day')) return 'FDC';
-  if (normalized.includes('outside school') || normalized.includes('oshc')) return 'OSHC';
+  if (normalized.includes('centre') || normalized.includes('long day')) return 'LDC';
+  if (normalized.includes('family')) return 'FDC';
+  if (normalized.includes('outside') || normalized.includes('oshc')) return 'OSHC';
   if (normalized.includes('preschool') || normalized.includes('kindergarten')) return 'Preschool';
   return 'LDC'; // default
 }
@@ -116,27 +115,27 @@ async function importACECQAData(csvData: string) {
     for (const record of batch) {
       try {
         const serviceData = {
-          acecqa_id: record.ServiceID,
+          acecqa_id: record.ServiceApprovalNumber,
           service_name: record.ServiceName,
-          provider_name: record.ProviderName,
+          provider_name: record.ProviderLegalName,
           address: record.ServiceAddress,
           suburb: record.Suburb,
           state: record.State,
           postcode: record.Postcode,
           service_type: normalizeServiceType(record.ServiceType),
           overall_rating: normalizeRating(record.OverallRating),
-          rating_date: parseDate(record.RatingDate),
-          qa1_rating: normalizeRating(record.QA1),
-          qa2_rating: normalizeRating(record.QA2),
-          qa3_rating: normalizeRating(record.QA3),
-          qa4_rating: normalizeRating(record.QA4),
-          qa5_rating: normalizeRating(record.QA5),
-          qa6_rating: normalizeRating(record.QA6),
-          qa7_rating: normalizeRating(record.QA7),
+          rating_date: parseDate(record.RatingsIssued),
+          qa1_rating: normalizeRating(record.QualityArea1Rating),
+          qa2_rating: normalizeRating(record.QualityArea2Rating),
+          qa3_rating: normalizeRating(record.QualityArea3Rating),
+          qa4_rating: normalizeRating(record.QualityArea4Rating),
+          qa5_rating: normalizeRating(record.QualityArea5Rating),
+          qa6_rating: normalizeRating(record.QualityArea6Rating),
+          qa7_rating: normalizeRating(record.QualityArea7Rating),
           phone: record.Phone,
-          email: record.Email,
-          website: record.Website,
-          approved_places: parseInt(record.ApprovedPlaces) || null,
+          email: null,
+          website: null,
+          approved_places: parseInt(record.NumberOfApprovedPlaces) || null,
           last_synced: new Date().toISOString(),
         };
 
@@ -147,14 +146,13 @@ async function importACECQAData(csvData: string) {
           });
 
         if (error) {
-          console.error(`Error importing service ${record.ServiceID}:`, error.message);
+          console.error(`Error importing service ${record.ServiceApprovalNumber}:`, error.message);
           errors++;
         } else {
-          if (i === 0) imported++;
-          else updated++;
+          imported++;
         }
       } catch (err) {
-        console.error(`Error processing service ${record.ServiceID}:`, err);
+        console.error(`Error processing service ${record.ServiceApprovalNumber}:`, err);
         errors++;
       }
     }

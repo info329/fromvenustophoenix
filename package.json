@@ -9,6 +9,7 @@
     "lint": "eslint",
     "seed": "tsx scripts/seed.ts",
     "import-acecqa": "tsx scripts/import-acecqa-data.ts",
+    "import-all-csv": "tsx scripts/import-all-csv.ts",
     "setup-schema": "tsx scripts/setup-db.js"
   },
   "dependencies": {

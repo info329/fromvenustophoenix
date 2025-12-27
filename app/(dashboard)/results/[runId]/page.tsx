@@ -308,21 +308,16 @@ export default function ResultsPage({ params }: { params: Promise<{ runId: strin
                       )}
 
                       {/* Likely Questions */}
-                      {aregradient-to-r from-amber-50 to-amber-100 border-2 border-amber-300">
-        <CardContent className="pt-6">
-          <div className="flex items-start gap-4">
-            <AlertTriangle className="w-8 h-8 text-amber-600 flex-shrink-0 mt-1" />
-            <div>
-              <h3 className="font-bold text-amber-900 text-lg mb-2">Important Disclaimer</h3>
-              <p className="text-sm text-amber-900 leading-relaxed">
-                This report provides a <strong>probability-based forecast only</strong>. It does not 
-                guarantee what an Authorised Officer will focus on during an Assessment and Rating visit. 
-                Results are based on the responses provided and should be used as a preparation guide only. 
-                Always refer to the National Quality Framework and your regulatory authority for 
-                authoritative guidance.
-              </p>
-            </div>
-          </div                   <span className="text-blue-600 font-bold mt-0.5">•</span>
+                      {area.likelyQuestions && area.likelyQuestions.length > 0 && (
+                        <div className="bg-blue-50 rounded-lg p-4">
+                          <h4 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+                            <Target className="w-4 h-4 text-blue-600" />
+                            Likely Questions
+                          </h4>
+                          <ul className="space-y-2 text-sm text-slate-700">
+                            {area.likelyQuestions.slice(0, 3).map((question: string, i: number) => (
+                              <li key={i} className="flex items-start gap-2">
+                                <span className="text-blue-600 font-bold mt-0.5">•</span>
                                 <span>{question}</span>
                               </li>
                             ))}
@@ -357,16 +352,21 @@ export default function ResultsPage({ params }: { params: Promise<{ runId: strin
       </div>
 
       {/* Disclaimer */}
-      <Card className="bg-amber-50 border-amber-200">
+      <Card className="bg-gradient-to-r from-amber-50 to-amber-100 border-2 border-amber-300">
         <CardContent className="pt-6">
-          <h3 className="font-semibold text-amber-900 mb-2">Important Disclaimer</h3>
-          <p className="text-sm text-amber-800">
-            This report provides a <strong>probability-based forecast only</strong>. It does not 
-            guarantee what an Authorised Officer will focus on during an Assessment and Rating visit. 
-            Results are based on the responses provided and should be used as a preparation guide only. 
-            Always refer to the National Quality Framework and your regulatory authority for 
-            authoritative guidance.
-          </p>
+          <div className="flex items-start gap-4">
+            <AlertTriangle className="w-8 h-8 text-amber-600 flex-shrink-0 mt-1" />
+            <div>
+              <h3 className="font-bold text-amber-900 text-lg mb-2">Important Disclaimer</h3>
+              <p className="text-sm text-amber-900 leading-relaxed">
+                This report provides a <strong>probability-based forecast only</strong>. It does not 
+                guarantee what an Authorised Officer will focus on during an Assessment and Rating visit. 
+                Results are based on the responses provided and should be used as a preparation guide only. 
+                Always refer to the National Quality Framework and your regulatory authority for 
+                authoritative guidance.
+              </p>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
