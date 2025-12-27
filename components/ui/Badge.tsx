@@ -3,24 +3,28 @@ import { cn } from '@/lib/utils/helpers';
 
 interface BadgeProps {
   children: React.ReactNode;
-  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info';
+  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info' | 'primary';
   className?: string;
+  onClick?: () => void;
 }
 
-export function Badge({ children, variant = 'default', className }: BadgeProps) {
+export function Badge({ children, variant = 'default', className, onClick }: BadgeProps) {
   const variantStyles = {
-    default: 'bg-slate-100 text-slate-800',
-    success: 'bg-green-100 text-green-800',
-    warning: 'bg-amber-100 text-amber-800',
-    danger: 'bg-red-100 text-red-800',
-    info: 'bg-blue-100 text-blue-800',
+    default: 'bg-gray-100 text-gray-700 border-gray-200',
+    success: 'bg-green-50 text-green-700 border-green-200',
+    warning: 'bg-amber-50 text-amber-700 border-amber-200',
+    danger: 'bg-red-50 text-red-700 border-red-200',
+    info: 'bg-blue-50 text-blue-700 border-blue-200',
+    primary: 'bg-blue-500 text-white border-blue-600',
   };
 
   return (
     <span
+      onClick={onClick}
       className={cn(
-        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border',
         variantStyles[variant],
+        onClick && 'cursor-pointer hover:opacity-80',
         className
       )}
     >
