@@ -12,18 +12,15 @@ export const dynamic = 'force-dynamic';
 export default async function ResultsPage({ params }: { params: { runId: string } }) {
   const supabase = await createClient();
   
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  if (!user) {
-    redirect('/login');
-  }
+  // Use test user ID for testing without authentication
+  const testUserId = '00000000-0000-0000-0000-000000000001';
 
   // Get scoring run with all details
   const { data: run, error } = await supabase
     .from('scoring_runs')
     .select('*, service:services(name, state, service_type)')
     .eq('id', params.runId)
-    .eq('user_id', user.id)
+    .eq('user_id', testUserId)
     .single();
 
   if (error || !run) {

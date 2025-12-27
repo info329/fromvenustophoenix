@@ -11,16 +11,13 @@ export const dynamic = 'force-dynamic';
 export default async function ServicesPage() {
   const supabase = await createClient();
   
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  if (!user) {
-    redirect('/login');
-  }
+  // Use test user ID for testing without authentication
+  const testUserId = '00000000-0000-0000-0000-000000000001';
 
   const { data: services } = await supabase
     .from('services')
     .select('*')
-    .eq('user_id', user.id)
+    .eq('user_id', testUserId)
     .order('created_at', { ascending: false });
 
   return (

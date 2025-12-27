@@ -11,31 +11,28 @@ export const dynamic = 'force-dynamic';
 export default async function DashboardPage() {
   const supabase = await createClient();
   
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  if (!user) {
-    redirect('/login');
-  }
+  // Use test user ID for testing without authentication
+  const testUserId = '00000000-0000-0000-0000-000000000001';
 
   // Get user profile
   const { data: profile } = await supabase
     .from('profiles')
     .select('*')
-    .eq('id', user.id)
+    .eq('id', testUserId)
     .single();
 
   // Get user's services
   const { data: services } = await supabase
     .from('services')
     .select('*')
-    .eq('user_id', user.id)
+    .eq('user_id', testUserId)
     .order('created_at', { ascending: false });
 
   // Get recent scoring runs
   const { data: scoringRuns } = await supabase
     .from('scoring_runs')
     .select('*, service:services(name)')
-    .eq('user_id', user.id)
+    .eq('user_id', testUserId)
     .order('created_at', { ascending: false })
     .limit(5);
 

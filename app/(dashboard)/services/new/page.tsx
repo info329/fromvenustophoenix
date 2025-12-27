@@ -32,13 +32,13 @@ export default function NewServicePage() {
     setLoading(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
+      // Use test user ID for testing without authentication
+      const testUserId = '00000000-0000-0000-0000-000000000001';
 
       const { error: insertError } = await supabase
         .from('services')
         .insert({
-          user_id: user.id,
+          user_id: testUserId,
           name: formData.name,
           state: formData.state,
           service_type: formData.service_type,
