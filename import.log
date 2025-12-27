@@ -1,0 +1,21 @@
+
+> fromvenustophoenix@0.1.0 import-all-csv
+> tsx scripts/import-all-csv.ts
+
+/workspaces/fromvenustophoenix/node_modules/@supabase/supabase-js/src/lib/helpers.ts:86
+    throw new Error('supabaseUrl is required.')
+          ^
+
+Error: supabaseUrl is required.
+    at validateSupabaseUrl (/workspaces/fromvenustophoenix/node_modules/@supabase/supabase-js/src/lib/helpers.ts:86:11)
+    at new SupabaseClient (/workspaces/fromvenustophoenix/node_modules/@supabase/supabase-js/src/SupabaseClient.ts:117:21)
+    at createClient (/workspaces/fromvenustophoenix/node_modules/@supabase/supabase-js/src/index.ts:60:10)
+    at <anonymous> (/workspaces/fromvenustophoenix/scripts/import-all-csv.ts:10:18)
+    at Object.<anonymous> (/workspaces/fromvenustophoenix/scripts/import-all-csv.ts:307:27)
+    at Module._compile (node:internal/modules/cjs/loader:1761:14)
+    at Object.transformer (/workspaces/fromvenustophoenix/node_modules/tsx/dist/register-D46fvsV_.cjs:3:1104)
+    at Module.load (node:internal/modules/cjs/loader:1481:32)
+    at Module._load (node:internal/modules/cjs/loader:1300:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+
+Node.js v24.11.1
