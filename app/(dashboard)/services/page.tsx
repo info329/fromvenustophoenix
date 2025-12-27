@@ -47,12 +47,20 @@ export default function ServicesPage() {
             Manage your childcare services and assessments
           </p>
         </div>
-        <Link href="/services/new">
-          <Button size="lg" className="gap-2">
-            <Plus className="w-5 h-5" />
-            Add Service
-          </Button>
-        </Link>
+        <div className="flex gap-3">
+          <Link href="/services/browse">
+            <Button variant="secondary" className="flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              Browse ACECQA Services
+            </Button>
+          </Link>
+          <Link href="/services/new">
+            <Button size="lg" className="gap-2">
+              <Plus className="w-5 h-5" />
+              Add Service
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Stats */}
