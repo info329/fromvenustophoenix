@@ -62,15 +62,7 @@ export function Header() {
           </div>
           
           <div className="flex items-center space-x-4">
-            {userEmail && (
-              <span className="text-sm text-slate-600">{userEmail}</span>
-            )}
-            <button
-              onClick={handleSignOut}
-              className="text-sm text-slate-600 hover:text-slate-900"
-            >
-              Sign Out
-            </button>
+            <span className="text-sm text-slate-600">Testing Mode</span>
           </div>
         </div>
       </div>
