@@ -7,11 +7,8 @@ export async function POST(request: Request) {
   try {
     const supabase = await createClient();
     
-    // Check authentication
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // Use test user ID for testing without authentication
+    const testUserId = '00000000-0000-0000-0000-000000000001';
 
     const body = await request.json();
     const { serviceId, responses } = body as { serviceId: string; responses: Response[] };
@@ -20,12 +17,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
     }
 
-    // Verify service belongs to user
+    // Verify service exists
     const { data: service, error: serviceError } = await supabase
       .from('services')
       .select('*')
       .eq('id', serviceId)
-      .eq('user_id', user.id)
       .single();
 
     if (serviceError || !service) {
@@ -74,7 +70,7 @@ export async function POST(request: Request) {
     const { data: scoringRun, error: runError } = await supabase
       .from('scoring_runs')
       .insert({
-        user_id: user.id,
+        user_id: testUserId,
         service_id: serviceId,
         questionnaire_id: questionnaire.id,
         questionnaire_version: questionnaire.version,
